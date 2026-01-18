@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ImaraWealth Investment | Empowering Africa</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-blue: #0a192f;
+            --gold: #d4af37;
+            --emerald: #10b981;
+        }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f4f7f9; }
+        .glass-card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border-radius: 15px; box-shadow: 0 8px 32px rgba(0,0,0,0.1); }
+        .bg-imara { background-color: var(--primary-blue); }
+        .text-gold { color: var(--gold); }
+        .ticker-wrap { overflow: hidden; background: #eee; white-space: nowrap; padding: 10px 0; border-bottom: 2px solid var(--gold); }
+        .ticker-move { display: inline-block; animation: ticker 30s linear infinite; }
+        @keyframes ticker { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
+        .nav-tab { cursor: pointer; transition: 0.3s; }
+        .nav-tab:hover { color: var(--gold); }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+    <div class="ticker-wrap">
+        <div class="ticker-move" id="notificationTicker">
+            <span class="mx-4"><i class="fas fa-check-circle text-green-500"></i> Sarah M. from Kenya just withdrew 45,000 KES</span>
+            <span class="mx-4"><i class="fas fa-check-circle text-green-500"></i> Kofi A. from Ghana just withdrew 1,200 GHS</span>
+            <span class="mx-4"><i class="fas fa-check-circle text-green-500"></i> Ahmed B. from Egypt just withdrew 8,000 EGP</span>
+            <span class="mx-4"><i class="fas fa-check-circle text-green-500"></i> Chidi E. from Nigeria just withdrew 150,000 NGN</span>
+        </div>
+    </div>
+
+    <div id="authScreen" class="min-h-screen flex items-center justify-center p-6">
+        <div class="max-w-md w-full glass-card p-8">
+            <div class="text-center mb-8">
+                <h1 class="text-3xl font-bold bg-imara text-white py-2 rounded">ImaraWealth</h1>
+                <p class="mt-2 text-gray-600">Join 10M+ Investors Across Africa</p>
+            </div>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium">Username</label>
+                    <input type="text" id="regUser" class="w-full p-3 border rounded mt-1" placeholder="Enter username">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium">Country</label>
+                    <select id="countrySelect" class="w-full p-3 border rounded mt-1">
+                        <option value="KE">🇰🇪 Kenya (+254)</option>
+                        <option value="NG">🇳🇬 Nigeria (+234)</option>
+                        <option value="GH">🇬🇭 Ghana (+233)</option>
+                        <option value="ZA">🇿🇦 South Africa (+27)</option>
+                        <option value="UG">🇺🇬 Uganda (+256)</option>
+                        <option value="TZ">🇹🇿 Tanzania (+255)</option>
+                        <option value="RW">🇷🇼 Rwanda (+250)</option>
+                        <option value="EG">🇪🇬 Egypt (+20)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium">Mobile Number</label>
+                    <input type="tel" id="regPhone" class="w-full p-3 border rounded mt-1" placeholder="712345678">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium">Password</label>
+                    <input type="password" id="regPass" class="w-full p-3 border rounded mt-1" placeholder="••••••••">
+                </div>
+                <button onclick="login()" class="w-full bg-imara text-white font-bold py-3 rounded-lg hover:opacity-90 transition">Login / Create Account</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="mainDashboard" class="hidden pb-24">
+        <div class="bg-imara p-6 text-white rounded-b-3xl shadow-lg">
+            <div class="flex justify-between items-center">
+                <div>
+                    <p class="text-gray-400">Welcome back,</p>
+                    <h2 id="displayUser" class="text-2xl font-bold text-gold">User</h2>
+                </div>
+                <div class="text-right">
+                    <p class="text-xs uppercase tracking-widest text-gray-400">Total Balance</p>
+                    <h3 class="text-3xl font-bold">$ <span id="userBalance">0.00</span></h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="p-6">
+            <h3 class="text-xl font-bold mb-4">Start Investment <span class="text-emerald-500 text-sm font-normal">(+10% Capital Growth)</span></h3>
+            
+            <div class="grid grid-cols-1 gap-4">
+                <div class="glass-card p-5 border-l-4 border-blue-500">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h4 class="font-bold text-lg">Weekly Plan</h4>
+                            <p class="text-gray-500 text-sm">Withdraw after 7 Days</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-xl font-bold text-imara">450 /-</p>
+                            <button onclick="deposit()" class="bg-emerald-500 text-white px-4 py-1 rounded-full text-sm mt-2">Invest</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-card p-5 border-l-4 border-gold">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h4 class="font-bold text-lg">Monthly Plan</h4>
+                            <p class="text-gray-500 text-sm">Withdraw after 30 Days</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-xl font-bold text-imara">750 /-</p>
+                            <button onclick="deposit()" class="bg-emerald-500 text-white px-4 py-1 rounded-full text-sm mt-2">Invest</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-card p-5 border-l-4 border-black">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h4 class="font-bold text-lg">Yearly Plan</h4>
+                            <p class="text-gray-500 text-sm">Withdraw after 365 Days</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-xl font-bold text-imara">1,050 /-</p>
+                            <button onclick="deposit()" class="bg-emerald-500 text-white px-4 py-1 rounded-full text-sm mt-2">Invest</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="px-6 mb-6">
+            <div class="bg-white p-6 rounded-2xl shadow-sm border">
+                <h3 class="font-bold mb-2">Withdraw Funds</h3>
+                <p class="text-xs text-red-500 mb-4">*Weekly investments require a 7-day maturation period.</p>
+                <input type="number" placeholder="Enter Amount" class="w-full p-3 border rounded mb-3">
+                <button onclick="alert('Withdrawal request received. System checking maturation date...')" class="w-full border-2 border-imara text-imara font-bold py-2 rounded-lg">Withdraw to Mobile Money</button>
+            </div>
+        </div>
+
+        <div class="px-6 grid grid-cols-2 gap-4">
+            <div class="glass-card p-4 text-center cursor-pointer" onclick="showTab('support')">
+                <i class="fas fa-headset text-2xl mb-2 text-blue-500"></i>
+                <p class="text-sm font-bold">Help & Support</p>
+            </div>
+            <div class="glass-card p-4 text-center cursor-pointer" onclick="showTab('history')">
+                <i class="fas fa-history text-2xl mb-2 text-gold"></i>
+                <p class="text-sm font-bold">History</p>
+            </div>
+        </div>
+
+        <div class="fixed bottom-0 w-full bg-white border-t flex justify-around py-4 text-gray-500">
+            <div class="text-center nav-tab" onclick="location.reload()">
+                <i class="fas fa-home"></i>
+                <p class="text-xs">Home</p>
+            </div>
+            <div class="text-center nav-tab" onclick="alert('ImaraWealth Investment: Founded 2022. Serving 10M+ users.')">
+                <i class="fas fa-info-circle"></i>
+                <p class="text-xs">About</p>
+            </div>
+            <div class="text-center nav-tab" onclick="alert('Join 10M active investors across Africa!')">
+                <i class="fas fa-users"></i>
+                <p class="text-xs">Users</p>
+            </div>
+            <div class="text-center nav-tab" id="adminBtn" onclick="showAdmin()">
+                <i class="fas fa-user-shield"></i>
+                <p class="text-xs">Admin</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="adminPanel" class="hidden fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center p-6 z-50">
+        <div class="bg-white w-full max-w-md rounded-2xl p-6">
+            <h2 class="text-2xl font-bold mb-4">Admin Control</h2>
+            <div class="space-y-4">
+                <input type="text" id="targetUser" placeholder="Target Username" class="w-full p-2 border rounded">
+                <input type="number" id="newBalance" placeholder="New Balance Amount" class="w-full p-2 border rounded">
+                <button onclick="updateBalance()" class="w-full bg-imara text-white py-2 rounded">Update User Balance</button>
+                <div class="mt-4 p-3 bg-gray-100 rounded text-sm h-32 overflow-y-auto">
+                    <p class="font-bold">Pending Complaints:</p>
+                    <div id="complaintList text-xs text-gray-600">No new complaints.</div>
+                </div>
+            </div>
+            <button onclick="closeAdmin()" class="mt-6 text-gray-500 text-sm">Close Admin Panel</button>
+        </div>
+    </div>
+
+    <script>
+        function login() {
+            const user = document.getElementById('regUser').value;
+            if(!user) { alert("Please enter a username"); return; }
+            
+            document.getElementById('authScreen').classList.add('hidden');
+            document.getElementById('mainDashboard').classList.remove('hidden');
+            document.getElementById('displayUser').innerText = user;
+        }
+
+        function deposit() {
+            const user = document.getElementById('displayUser').innerText;
+            const phoneNumber = "254700000000"; // Replace with your actual WhatsApp number
+            const message = encodeURIComponent(`Hello ImaraWealth, I am ${user}. I want to make a deposit into my account.`);
+            window.open(`https://wa.me/${phoneNumber}?text=${message}`, '_blank');
+        }
+
+        function showAdmin() {
+            const pass = prompt("Enter Admin Secret Key:");
+            if(pass === "admin123") {
+                document.getElementById('adminPanel').classList.remove('hidden');
+            } else {
+                alert("Access Denied");
+            }
+        }
+
+        function closeAdmin() {
+            document.getElementById('adminPanel').classList.add('hidden');
+        }
+
+        function updateBalance() {
+            const target = document.getElementById('targetUser').value;
+            const amt = document.getElementById('newBalance').value;
+            if(target && amt) {
+                document.getElementById('userBalance').innerText = amt;
+                alert(`Balance for ${target} updated to ${amt}`);
+                closeAdmin();
+            }
+        }
+
+        function showTab(type) {
+            if(type === 'history') {
+                alert("No transaction history yet. Start investing to see data.");
+            } else {
+                const complaint = prompt("Describe your issue:");
+                if(complaint) alert("Support ticket sent to Admin Dashboard.");
+            }
+        }
+    </script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ImaraWealth Investment | Empowering Africa</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-blue: #0a192f;
+            --gold: #d4af37;
+            --emerald: #10b981;
+        }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f4f7f9; }
+        .glass-card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border-radius: 15px; box-shadow: 0 8px 32px rgba(0,0,0,0.1); }
+        .bg-imara { background-color: var(--primary-blue); }
+        .text-gold { color: var(--gold); }
+        .ticker-wrap { overflow: hidden; background: #eee; white-space: nowrap; padding: 10px 0; border-bottom: 2px solid var(--gold); }
+        .ticker-move { display: inline-block; animation: ticker 30s linear infinite; }
+        @keyframes ticker { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
+        .nav-tab { cursor: pointer; transition: 0.3s; }
+        .nav-tab:hover { color: var(--gold); }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+    <div class="ticker-wrap">
+        <div class="ticker-move" id="notificationTicker">
+            <span class="mx-4"><i class="fas fa-check-circle text-green-500"></i> Sarah M. from Kenya just withdrew 45,000 KES</span>
+            <span class="mx-4"><i class="fas fa-check-circle text-green-500"></i> Kofi A. from Ghana just withdrew 1,200 GHS</span>
+            <span class="mx-4"><i class="fas fa-check-circle text-green-500"></i> Ahmed B. from Egypt just withdrew 8,000 EGP</span>
+            <span class="mx-4"><i class="fas fa-check-circle text-green-500"></i> Chidi E. from Nigeria just withdrew 150,000 NGN</span>
+        </div>
+    </div>
+
+    <div id="authScreen" class="min-h-screen flex items-center justify-center p-6">
+        <div class="max-w-md w-full glass-card p-8">
+            <div class="text-center mb-8">
+                <h1 class="text-3xl font-bold bg-imara text-white py-2 rounded">ImaraWealth</h1>
+                <p class="mt-2 text-gray-600">Join 10M+ Investors Across Africa</p>
+            </div>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium">Username</label>
+                    <input type="text" id="regUser" class="w-full p-3 border rounded mt-1" placeholder="Enter username">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium">Country</label>
+                    <select id="countrySelect" class="w-full p-3 border rounded mt-1">
+                        <option value="KE">🇰🇪 Kenya (+254)</option>
+                        <option value="NG">🇳🇬 Nigeria (+234)</option>
+                        <option value="GH">🇬🇭 Ghana (+233)</option>
+                        <option value="ZA">🇿🇦 South Africa (+27)</option>
+                        <option value="UG">🇺🇬 Uganda (+256)</option>
+                        <option value="TZ">🇹🇿 Tanzania (+255)</option>
+                        <option value="RW">🇷🇼 Rwanda (+250)</option>
+                        <option value="EG">🇪🇬 Egypt (+20)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium">Mobile Number</label>
+                    <input type="tel" id="regPhone" class="w-full p-3 border rounded mt-1" placeholder="712345678">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium">Password</label>
+                    <input type="password" id="regPass" class="w-full p-3 border rounded mt-1" placeholder="••••••••">
+                </div>
+                <button onclick="login()" class="w-full bg-imara text-white font-bold py-3 rounded-lg hover:opacity-90 transition">Login / Create Account</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="mainDashboard" class="hidden pb-24">
+        <div class="bg-imara p-6 text-white rounded-b-3xl shadow-lg">
+            <div class="flex justify-between items-center">
+                <div>
+                    <p class="text-gray-400">Welcome back,</p>
+                    <h2 id="displayUser" class="text-2xl font-bold text-gold">User</h2>
+                </div>
+                <div class="text-right">
+                    <p class="text-xs uppercase tracking-widest text-gray-400">Total Balance</p>
+                    <h3 class="text-3xl font-bold">$ <span id="userBalance">0.00</span></h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="p-6">
+            <h3 class="text-xl font-bold mb-4">Start Investment <span class="text-emerald-500 text-sm font-normal">(+10% Capital Growth)</span></h3>
+            
+            <div class="grid grid-cols-1 gap-4">
+                <div class="glass-card p-5 border-l-4 border-blue-500">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h4 class="font-bold text-lg">Weekly Plan</h4>
+                            <p class="text-gray-500 text-sm">Withdraw after 7 Days</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-xl font-bold text-imara">450 /-</p>
+                            <button onclick="deposit()" class="bg-emerald-500 text-white px-4 py-1 rounded-full text-sm mt-2">Invest</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-card p-5 border-l-4 border-gold">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h4 class="font-bold text-lg">Monthly Plan</h4>
+                            <p class="text-gray-500 text-sm">Withdraw after 30 Days</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-xl font-bold text-imara">750 /-</p>
+                            <button onclick="deposit()" class="bg-emerald-500 text-white px-4 py-1 rounded-full text-sm mt-2">Invest</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-card p-5 border-l-4 border-black">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h4 class="font-bold text-lg">Yearly Plan</h4>
+                            <p class="text-gray-500 text-sm">Withdraw after 365 Days</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-xl font-bold text-imara">1,050 /-</p>
+                            <button onclick="deposit()" class="bg-emerald-500 text-white px-4 py-1 rounded-full text-sm mt-2">Invest</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="px-6 mb-6">
+            <div class="bg-white p-6 rounded-2xl shadow-sm border">
+                <h3 class="font-bold mb-2">Withdraw Funds</h3>
+                <p class="text-xs text-red-500 mb-4">*Weekly investments req
