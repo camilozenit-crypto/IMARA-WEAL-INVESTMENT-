@@ -3,286 +3,232 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ImaraWealth Investment | Institutional Portal</title>
+    <title>ImaraWealth | Institutional Grade Portal</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --navy: #020617; --gold: #b45309; --emerald: #059669; }
-        body { font-family: 'Inter', sans-serif; background: #f8fafc; }
-        .imara-dark { background-color: var(--navy); }
-        .text-gold { color: #f59e0b; }
-        .card { background: white; border-radius: 20px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1); }
-        .ticker-wrap { background: #000; color: #f59e0b; overflow: hidden; white-space: nowrap; padding: 10px 0; font-size: 12px; font-weight: bold; border-bottom: 2px solid #f59e0b; }
-        .ticker-move { display: inline-block; animation: ticker 50s linear infinite; }
-        @keyframes ticker { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
+        :root { --brand: #0f172a; --gold: #ca8a04; }
+        body { font-family: 'Inter', sans-serif; background: #f8fafc; color: #1e293b; }
+        .imara-card { background: white; border-radius: 24px; box-shadow: 0 10px 30px -5px rgba(0,0,0,0.05); }
+        .bg-navy { background-color: var(--brand); }
+        .text-gold { color: var(--gold); }
         .hidden { display: none; }
-        input, select { border: 1px solid #e2e8f0 !important; outline: none; transition: 0.3s; }
-        input:focus { border-color: #f59e0b !important; ring: 2px solid #fef3c7; }
+        .active-tab { color: var(--gold) !important; border-bottom: 2px solid var(--gold); }
+        input, select { border: 1px solid #e2e8f0 !important; outline: none !important; }
+        input:focus { border-color: var(--gold) !important; }
     </style>
 </head>
 <body onload="checkSession()">
 
-    <div class="ticker-wrap">
-        <div class="ticker-move">
-            LIVE PAYOUTS: 🇰🇪 @Maina_W ($1,450.00) | 🇳🇬 @Chukwuma ($2,100.00) | 🇿🇦 @Dlamini ($890.00) | 🇬🇭 @Mensah ($500.00) | 🇺🇬 @Museveni_J ($1,100.00) | 🇪🇬 @Omar ($3,200.00) | TOTAL INVESTORS: 10,482,901 | HQ: NAIROBI, KENYA
-        </div>
-    </div>
-
-    <div id="authScreen" class="min-h-screen flex items-center justify-center p-6">
-        <div class="max-w-md w-full card p-8 border-t-8 border-yellow-600">
+    <div id="authScreen" class="min-h-screen flex items-center justify-center p-6 bg-slate-50">
+        <div class="max-w-md w-full imara-card p-10 border-t-8 border-amber-600">
             <div class="text-center mb-8">
-                <h1 class="text-4xl font-black text-slate-900 tracking-tighter italic">IMARA<span class="text-yellow-600">WEALTH</span></h1>
-                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-2">Nairobi Main Branch • Est. 2022</p>
+                <h1 class="text-4xl font-black text-slate-900 tracking-tighter">IMARA<span class="text-amber-600">WEALTH</span></h1>
+                <p class="text-[10px] font-bold text-slate-400 mt-2 uppercase tracking-widest">Global Asset Management</p>
             </div>
             
             <div class="space-y-4">
-                <div class="relative">
-                    <i class="fas fa-user absolute left-4 top-4 text-slate-300"></i>
-                    <input type="text" id="regUser" class="w-full p-4 pl-12 rounded-2xl bg-slate-50" placeholder="Unique Username">
-                </div>
-                
-                <div class="flex flex-col gap-1">
-                    <label class="text-[10px] font-bold text-slate-500 ml-2">COUNTRY OF RESIDENCE</label>
-                    <select id="regCountry" class="w-full p-4 rounded-2xl bg-slate-50 text-sm">
-                        <option value="Kenya">🇰🇪 Kenya (+254)</option><option value="Nigeria">🇳🇬 Nigeria (+234)</option><option value="South Africa">🇿🇦 South Africa (+27)</option>
-                        <option value="Algeria">🇩🇿 Algeria (+213)</option><option value="Angola">🇦🇴 Angola (+244)</option><option value="Benin">🇧🇯 Benin (+229)</option>
-                        <option value="Botswana">🇧🇼 Botswana (+267)</option><option value="Burkina Faso">🇧🇫 Burkina Faso (+226)</option><option value="Burundi">🇧🇮 Burundi (+257)</option>
-                        <option value="Cameroon">🇨🇲 Cameroon (+237)</option><option value="Cape Verde">🇨🇻 Cape Verde (+238)</option><option value="CAR">🇨🇫 CAR (+236)</option>
-                        <option value="Chad">🇹🇩 Chad (+235)</option><option value="Comoros">🇰🇲 Comoros (+269)</option><option value="Congo">🇨🇬 Congo (+242)</option>
-                        <option value="DRC">🇨🇩 DR Congo (+243)</option><option value="Djibouti">🇩🇯 Djibouti (+253)</option><option value="Egypt">🇪🇬 Egypt (+20)</option>
-                        <option value="Equatorial Guinea">🇬🇶 Eq. Guinea (+240)</option><option value="Eritrea">🇪🇷 Eritrea (+291)</option><option value="Eswatini">🇸🇿 Eswatini (+268)</option>
-                        <option value="Ethiopia">🇪🇹 Ethiopia (+251)</option><option value="Gabon">🇬🇦 Gabon (+241)</option><option value="Gambia">🇬🇲 Gambia (+220)</option>
-                        <option value="Ghana">🇬🇭 Ghana (+233)</option><option value="Guinea">🇬🇳 Guinea (+224)</option><option value="Guinea-Bissau">🇬🇼 Guinea-Bissau (+245)</option>
-                        <option value="Ivory Coast">🇨🇮 Ivory Coast (+225)</option><option value="Lesotho">🇱🇸 Lesotho (+266)</option><option value="Liberia">🇱🇷 Liberia (+231)</option>
-                        <option value="Libya">🇱🇾 Libya (+218)</option><option value="Madagascar">🇲🇬 Madagascar (+261)</option><option value="Malawi">🇲🇼 Malawi (+265)</option>
-                        <option value="Mali">🇲🇱 Mali (+223)</option><option value="Mauritania">🇲🇷 Mauritania (+222)</option><option value="Mauritius">🇲🇺 Mauritius (+230)</option>
-                        <option value="Morocco">🇲🇦 Morocco (+212)</option><option value="Mozambique">🇲🇿 Mozambique (+258)</option><option value="Namibia">🇳🇦 Namibia (+264)</option>
-                        <option value="Niger">🇳🇪 Niger (+227)</option><option value="Rwanda">🇷🇼 Rwanda (+250)</option><option value="Senegal">🇸🇳 Senegal (+221)</option>
-                        <option value="Seychelles">🇸🇨 Seychelles (+248)</option><option value="Sierra Leone">🇸🇱 Sierra Leone (+232)</option><option value="Somalia">🇸🇴 Somalia (+252)</option>
-                        <option value="South Sudan">🇸🇸 South Sudan (+211)</option><option value="Sudan">🇸🇩 Sudan (+249)</option><option value="Tanzania">🇹🇿 Tanzania (+255)</option>
-                        <option value="Togo">🇹🇬 Togo (+228)</option><option value="Tunisia">🇹🇳 Tunisia (+216)</option><option value="Uganda">🇺🇬 Uganda (+256)</option>
-                        <option value="Zambia">🇿🇲 Zambia (+260)</option><option value="Zimbabwe">🇿🇼 Zimbabwe (+263)</option>
-                    </select>
-                </div>
-
-                <input type="tel" id="regPhone" class="w-full p-4 rounded-2xl bg-slate-50" placeholder="Mobile/WhatsApp Number">
-                <input type="password" id="regPass" class="w-full p-4 rounded-2xl bg-slate-50" placeholder="Security Password">
-                
+                <input type="text" id="regUser" class="w-full p-4 rounded-2xl bg-slate-100" placeholder="Unique Username">
+                <select id="regCountry" class="w-full p-4 rounded-2xl bg-slate-100 text-sm">
+                    <option value="Kenya">🇰🇪 Kenya (+254)</option>
+                    <option value="Nigeria">🇳🇬 Nigeria (+234)</option>
+                    <option value="South Africa">🇿🇦 South Africa (+27)</option>
+                    <option value="Ghana">🇬🇭 Ghana (+233)</option>
+                    <option value="Uganda">🇺🇬 Uganda (+256)</option>
+                    <option value="Tanzania">🇹🇿 Tanzania (+255)</option>
+                    <option value="Rwanda">🇷🇼 Rwanda (+250)</option>
+                    <option value="Egypt">🇪🇬 Egypt (+20)</option>
+                    <option value="Other">🌍 Other African Nations</option>
+                </select>
+                <input type="password" id="regPass" class="w-full p-4 rounded-2xl bg-slate-100" placeholder="Security Password">
                 <button onclick="handleLogin()" class="w-full py-5 rounded-2xl bg-slate-900 text-white font-bold text-lg hover:bg-black transition shadow-lg">Login to Portfolio</button>
             </div>
         </div>
     </div>
 
-    <div id="appContent" class="hidden max-w-md mx-auto bg-white min-h-screen pb-28 shadow-2xl">
-        <div class="imara-dark p-8 text-white rounded-b-[45px] shadow-xl">
-            <div class="flex justify-between items-start mb-8">
+    <div id="appContent" class="hidden max-w-md mx-auto bg-white min-h-screen pb-32 shadow-2xl">
+        
+        <div class="bg-slate-900 p-10 text-white rounded-b-[50px] shadow-2xl">
+            <div class="flex justify-between items-center mb-8">
                 <div>
-                    <h2 class="text-2xl font-black italic"><span id="userDisplay">Investor</span> <i class="fas fa-check-circle text-blue-400 text-xs"></i></h2>
-                    <p class="text-[10px] text-yellow-500 font-bold tracking-widest">MANAGER: LOSKI TERER</p>
+                    <h2 class="text-2xl font-black" id="userDisplay">Investor</h2>
+                    <span class="text-[9px] bg-amber-600 text-white px-3 py-1 rounded-full uppercase font-bold">Verified Institution <i class="fas fa-check-circle"></i></span>
                 </div>
-                <button onclick="logout()" class="bg-white/10 p-2 rounded-full px-4 text-[10px]">Logout</button>
+                <i class="fas fa-sign-out-alt opacity-30 cursor-pointer" onclick="logout()"></i>
             </div>
             
-            <div class="bg-white/5 border border-white/10 p-8 rounded-[30px] text-center">
-                <p class="text-[10px] text-slate-400 font-bold uppercase mb-2">Withdrawable Balance (USD)</p>
-                <h3 class="text-5xl font-black font-mono tracking-tighter text-yellow-500">$ <span id="balanceDisplay">0.00</span></h3>
+            <div class="bg-white/5 border border-white/10 p-8 rounded-[35px] text-center">
+                <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-2">Total Managed Balance</p>
+                <h3 class="text-5xl font-black font-mono tracking-tighter text-amber-500"><span id="currSym">$</span> <span id="balanceDisplay">0.00</span></h3>
             </div>
         </div>
 
-        <div class="p-6">
-            <h3 class="font-black text-slate-800 text-sm mb-4 flex items-center gap-2">
-                <i class="fas fa-chart-line text-yellow-600"></i> START INVESTMENT (+10% ROI)
-            </h3>
-            <div class="space-y-4">
-                <div class="card p-6 border-l-8 border-slate-900 flex justify-between items-center cursor-pointer" onclick="contactWhatsApp('Weekly Plan ($450)')">
-                    <div><p class="text-[10px] font-bold text-slate-400 uppercase">Weekly Cycle</p><h4 class="text-xl font-black">$450.00</h4></div>
-                    <span class="bg-green-100 text-green-700 text-[10px] font-bold px-3 py-1 rounded-full">Earn $45.00</span>
-                </div>
-                <div class="card p-6 border-l-8 border-yellow-600 flex justify-between items-center cursor-pointer" onclick="contactWhatsApp('Monthly Plan ($750)')">
-                    <div><p class="text-[10px] font-bold text-slate-400 uppercase">Monthly Cycle</p><h4 class="text-xl font-black">$750.00</h4></div>
-                    <span class="bg-green-100 text-green-700 text-[10px] font-bold px-3 py-1 rounded-full">Earn $75.00</span>
-                </div>
-                <div class="card p-6 border-l-8 border-emerald-600 flex justify-between items-center cursor-pointer" onclick="contactWhatsApp('Yearly Plan ($1050)')">
-                    <div><p class="text-[10px] font-bold text-slate-400 uppercase">Yearly Cycle</p><h4 class="text-xl font-black">$1,050.00</h4></div>
-                    <span class="bg-green-100 text-green-700 text-[10px] font-bold px-3 py-1 rounded-full">Earn $105.00</span>
-                </div>
+        <div class="flex justify-around bg-white border-b py-4 text-[11px] font-black text-slate-400 uppercase tracking-tighter">
+            <button onclick="showTab('invest')" id="btn-invest" class="active-tab pb-2 px-4">Investments</button>
+            <button onclick="showTab('tasks')" id="btn-tasks" class="pb-2 px-4">Tasks & Earn</button>
+            <button onclick="showTab('help')" id="btn-help" class="pb-2 px-4">Support</button>
+        </div>
+
+        <div id="tab-invest" class="p-6 space-y-4">
+            <h3 class="text-xs font-black text-slate-800 italic mb-2">ACTIVE GROWTH CYCLES (+25%)</h3>
+            <div onclick="contactWA('Weekly Pack (25% ROI)')" class="imara-card p-6 border flex justify-between items-center cursor-pointer hover:border-amber-500 transition">
+                <div><h4 class="font-black text-lg">Standard Pack</h4><p class="text-[10px] text-slate-400">7 Day Maturity • 25% Growth</p></div>
+                <div class="bg-emerald-50 text-emerald-600 p-2 rounded-lg font-bold text-xs">+25%</div>
+            </div>
+            <div onclick="contactWA('Monthly Pack (25% ROI)')" class="imara-card p-6 border flex justify-between items-center cursor-pointer hover:border-amber-500 transition">
+                <div><h4 class="font-black text-lg">Premium Pack</h4><p class="text-[10px] text-slate-400">30 Day Maturity • 25% Growth</p></div>
+                <div class="bg-emerald-50 text-emerald-600 p-2 rounded-lg font-bold text-xs">+25%</div>
             </div>
         </div>
 
-        <div class="px-6 mb-8">
-            <h3 class="font-black text-slate-800 text-sm mb-4 italic">WITHDRAWAL PORTAL</h3>
-            <div class="space-y-3">
-                <details class="group bg-slate-50 rounded-2xl border">
-                    <summary class="list-none p-5 flex justify-between items-center font-bold text-xs cursor-pointer">
-                        <span><i class="fas fa-university mr-3 text-slate-900"></i> LOCAL BANK TRANSFER (AFRICA)</span>
-                        <i class="fas fa-chevron-down group-open:rotate-180 transition"></i>
-                    </summary>
-                    <div class="p-5 bg-white space-y-3 border-t">
-                        <input type="text" id="wBankName" class="w-full p-4 rounded-xl text-xs bg-slate-50" placeholder="Bank Name (e.g., Equity, Zenith, KCB)">
-                        <input type="text" id="wBankAcc" class="w-full p-4 rounded-xl text-xs bg-slate-50" placeholder="Account Number">
-                        <button onclick="alert('Bank Withdrawal Initiated. Our Manager Loski Terer will approve shortly.')" class="w-full py-4 bg-slate-900 text-white rounded-xl font-bold text-[10px] uppercase">Request Payout</button>
-                    </div>
-                </details>
-                <details class="group bg-slate-50 rounded-2xl border">
-                    <summary class="list-none p-5 flex justify-between items-center font-bold text-xs cursor-pointer">
-                        <span><i class="fab fa-ethereum mr-3 text-orange-500"></i> CRYPTO (USDT TRC20)</span>
-                        <i class="fas fa-chevron-down group-open:rotate-180 transition"></i>
-                    </summary>
-                    <div class="p-5 bg-white space-y-3 border-t">
-                        <input type="text" id="wCrypto" class="w-full p-4 rounded-xl text-xs bg-slate-50 font-mono" placeholder="Paste USDT TRC20 Address">
-                        <button onclick="alert('TRC20 Withdrawal Queued.')" class="w-full py-4 bg-orange-500 text-white rounded-xl font-bold text-[10px] uppercase">Send to Wallet</button>
-                    </div>
-                </details>
-                <details class="group bg-slate-50 rounded-2xl border">
-                    <summary class="list-none p-5 flex justify-between items-center font-bold text-xs cursor-pointer">
-                        <span><i class="fas fa-mobile-alt mr-3 text-green-600"></i> M-PESA / MOBILE MONEY</span>
-                        <i class="fas fa-chevron-down group-open:rotate-180 transition"></i>
-                    </summary>
-                    <div class="p-5 bg-white space-y-3 border-t">
-                        <input type="tel" id="wMpesa" class="w-full p-4 rounded-xl text-xs bg-slate-50" placeholder="Mobile Number">
-                        <button onclick="alert('M-Pesa Payout Pending Verification.')" class="w-full py-4 bg-green-600 text-white rounded-xl font-bold text-[10px] uppercase">Request Mobile Payout</button>
-                    </div>
-                </details>
+        <div id="tab-tasks" class="hidden p-6">
+            <div class="bg-gradient-to-br from-amber-500 to-orange-700 p-8 rounded-[35px] text-white shadow-xl relative overflow-hidden">
+                <div class="relative z-10">
+                    <h4 class="text-xl font-black mb-2">Refer & Earn $100</h4>
+                    <p class="text-[11px] opacity-90 mb-6">Receive a $100 (KES 13,000) bonus for every 10 active investors referred to the platform.</p>
+                    <button onclick="contactWA('Unlock Tasks for $100')" class="w-full py-4 bg-white text-orange-700 rounded-2xl font-black text-xs uppercase shadow-lg">Unlock Tasks Now <i class="fas fa-lock ml-2"></i></button>
+                </div>
+                <i class="fas fa-gift absolute -bottom-4 -right-4 text-white/10 text-9xl"></i>
             </div>
         </div>
 
-        <div class="px-6 pb-20">
-            <h3 class="font-black text-slate-800 text-sm mb-4 flex justify-between items-center">
-                <span>TRANSACTION LEDGER</span>
-                <i class="fas fa-history text-slate-300"></i>
-            </h3>
+        <div id="tab-help" class="hidden p-6 space-y-4">
+            <h3 class="text-xs font-black text-slate-800 italic">OFFICIAL REGISTRY COMPLAINTS</h3>
+            <textarea id="supportText" class="w-full p-5 rounded-3xl bg-slate-50 border border-slate-200 text-sm h-32" placeholder="Describe your issue or withdrawal request..."></textarea>
+            <button onclick="submitTicket()" class="w-full py-4 bg-slate-900 text-white rounded-2xl font-black text-xs uppercase tracking-widest">Submit to Admin</button>
+        </div>
+
+        <div class="px-6 mb-10">
+            <h3 class="text-xs font-black text-slate-800 italic mb-4">TRANSACTION HISTORY</h3>
             <div id="historyList" class="space-y-2"></div>
         </div>
 
-        <footer class="p-10 bg-slate-50 text-center border-t">
-            <p class="font-black text-slate-900 text-[12px] mb-1 italic">IMARAWEALTH INVESTMENT LTD</p>
-            <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Registered Asset Management • No. IW-2024</p>
-            <p class="text-[10px] text-slate-400 mt-1">Main Branch: Westlands Commercial Center, Nairobi, Kenya</p>
-            <div class="flex justify-center gap-4 mt-4 text-[10px] font-bold text-slate-500">
-                <span onclick="alert('ImaraWealth: Helping Africa grow capital with 10% daily ROI since 2022.')">ABOUT US</span>
-                <span onclick="alert('24/7 Support: Reach us via WhatsApp or at help@imarawealth.com')">HELP</span>
-                <span onclick="alert('1. Register 2. Chat with Manager 3. Deposit 4. Choose Plan 5. Withdraw Profit')">HOW IT WORKS</span>
-            </div>
-        </footer>
     </div>
 
-    <div id="adminModal" class="hidden fixed inset-0 bg-slate-950/98 z-50 flex items-center justify-center p-6">
-        <div class="bg-white rounded-[40px] w-full max-w-sm p-10 shadow-2xl relative overflow-hidden">
-            <div class="absolute top-0 left-0 w-full h-2 bg-yellow-600"></div>
-            <h2 class="text-2xl font-black mb-1">MANAGER CONSOLE</h2>
-            <p class="text-[10px] text-slate-400 font-mono mb-8 uppercase tracking-widest">Official Management Use Only</p>
+    <div id="adminPanel" class="hidden fixed inset-0 bg-black/95 z-50 flex items-center justify-center p-6">
+        <div class="bg-white w-full max-w-sm rounded-[45px] p-10 relative">
+            <div class="text-center mb-6">
+                <h2 class="text-2xl font-black italic">MANAGER CONSOLE</h2>
+                <p class="text-[9px] text-slate-400 font-bold tracking-widest">SECURE ADMINISTRATIVE ACCESS</p>
+            </div>
             
             <div class="space-y-4">
-                <div>
-                    <label class="text-[10px] font-bold text-slate-400 ml-1">USER TO EDIT</label>
-                    <input type="text" id="adminTarget" class="w-full p-4 rounded-2xl bg-slate-50 text-sm" placeholder="Unique Username">
+                <input type="text" id="targetUser" class="w-full p-4 rounded-2xl bg-slate-50 border" placeholder="Username">
+                <input type="number" id="targetAmt" class="w-full p-4 rounded-2xl bg-slate-50 border" placeholder="Amount to ADD">
+                <button onclick="adminExecute()" class="w-full py-5 bg-amber-600 text-white font-black rounded-2xl shadow-xl">CREDIT ACCOUNT</button>
+                
+                <div class="mt-8 border-t pt-4">
+                    <h4 class="text-[10px] font-bold text-slate-400 uppercase mb-2">Support Inbox</h4>
+                    <div id="inboxView" class="h-24 overflow-y-auto bg-slate-50 p-3 rounded-xl text-[10px] border italic"></div>
                 </div>
-                <div>
-                    <label class="text-[10px] font-bold text-slate-400 ml-1">SET NEW BALANCE ($)</label>
-                    <input type="number" id="adminAmt" class="w-full p-4 rounded-2xl bg-slate-50 text-sm" placeholder="0.00">
-                </div>
-                <button onclick="updateUserBalance()" class="w-full py-5 bg-yellow-600 text-white font-bold rounded-2xl shadow-xl hover:scale-105 transition">APPROVE & CREDIT</button>
-                <button onclick="toggleAdmin(false)" class="w-full text-slate-400 text-[10px] font-bold uppercase tracking-widest">Exit Secure View</button>
+
+                <button onclick="toggleAdmin(false)" class="w-full text-slate-400 text-xs mt-4">Exit Console</button>
             </div>
         </div>
     </div>
 
-    <div class="fixed bottom-0 w-full bg-white border-t px-12 py-5 flex justify-between items-center max-w-md mx-auto left-0 right-0 z-40">
-        <i class="fas fa-home text-yellow-600 text-xl cursor-pointer" onclick="location.reload()"></i>
-        <div onclick="toggleAdmin(true)" class="w-16 h-16 bg-slate-900 text-white rounded-full flex items-center justify-center -mt-14 border-8 border-white shadow-2xl cursor-pointer">
-            <i class="fas fa-user-shield"></i>
+    <div class="fixed bottom-0 w-full bg-white/90 backdrop-blur-lg border-t px-12 py-6 flex justify-around max-w-md mx-auto left-0 right-0 z-40">
+        <i class="fas fa-chart-pie text-xl text-slate-300 cursor-pointer" onclick="showTab('invest')"></i>
+        <div onclick="toggleAdmin(true)" class="w-16 h-16 bg-slate-900 text-white rounded-full flex items-center justify-center -mt-16 border-8 border-white shadow-2xl cursor-pointer">
+            <i class="fas fa-fingerprint"></i>
         </div>
-        <i class="fas fa-headset text-slate-200 text-xl cursor-pointer" onclick="alert('Directing to ImaraWealth Help Desk...')"></i>
+        <i class="fas fa-wallet text-xl text-slate-300 cursor-pointer" onclick="alert('Withdrawals: Contact Admin via Support or WhatsApp')"></i>
     </div>
 
     <script>
-        let currentSession = null;
+        let userData = null;
 
         function checkSession() {
-            const user = localStorage.getItem('imara_user');
-            if(user) { currentSession = user; showDashboard(); }
+            const saved = localStorage.getItem('im_auth');
+            if(saved) { userData = JSON.parse(saved); launch(); }
         }
 
         function handleLogin() {
-            const user = document.getElementById('regUser').value.trim();
-            if(!user) return alert("Please enter your unique username.");
+            const name = document.getElementById('regUser').value.trim();
+            const country = document.getElementById('regCountry').value;
+            if(!name) return alert("Username required");
             
-            currentSession = user;
-            localStorage.setItem('imara_user', user);
+            userData = { name, country };
+            localStorage.setItem('im_auth', JSON.stringify(userData));
             
-            if(!localStorage.getItem(`db_${user}`)) {
-                localStorage.setItem(`db_${user}`, JSON.stringify({ balance: 0.00, logs: [] }));
+            if(!localStorage.getItem(`data_${name}`)) {
+                localStorage.setItem(`data_${name}`, JSON.stringify({ balance: 0, logs: [] }));
             }
-            showDashboard();
+            launch();
         }
 
-        function showDashboard() {
+        function launch() {
             document.getElementById('authScreen').classList.add('hidden');
             document.getElementById('appContent').classList.remove('hidden');
-            document.getElementById('userDisplay').innerText = currentSession;
+            document.getElementById('userDisplay').innerText = userData.name;
+            document.getElementById('currSym').innerText = (userData.country === 'Kenya') ? 'KSH' : '$';
             refreshUI();
         }
 
-        function refreshUI() {
-            const data = JSON.parse(localStorage.getItem(`db_${currentSession}`));
-            document.getElementById('balanceDisplay').innerText = parseFloat(data.balance).toLocaleString(undefined, {minimumFractionDigits: 2});
-            
-            const list = document.getElementById('historyList');
-            if(data.logs.length > 0) {
-                list.innerHTML = data.logs.map(log => `
-                    <div class="bg-white p-5 rounded-2xl border border-slate-100 flex justify-between items-center shadow-sm">
-                        <div>
-                            <p class="text-[9px] font-black text-emerald-600 uppercase tracking-tighter italic">Verified Treasury Credit</p>
-                            <p class="text-[8px] text-slate-400 font-mono">${log.time}</p>
-                        </div>
-                        <p class="font-black text-slate-900 text-md">$ ${log.amt}</p>
-                    </div>
-                `).reverse().join('');
-            } else {
-                list.innerHTML = `<p class="text-center text-[11px] text-slate-300 py-10 font-bold italic">No statement history for ${currentSession}</p>`;
-            }
+        function showTab(tab) {
+            ['invest', 'tasks', 'help'].forEach(t => {
+                document.getElementById('tab-'+t).classList.add('hidden');
+                document.getElementById('btn-'+t).classList.remove('active-tab');
+            });
+            document.getElementById('tab-'+tab).classList.remove('hidden');
+            document.getElementById('btn-'+tab).classList.add('active-tab');
         }
 
-        function contactWhatsApp(plan) {
-            window.open(`https://wa.me/254100820805?text=Hello Manager Loski Terer, my username is ${currentSession}. I want to deposit and start the ${plan}. Send me the deposit details.`, '_blank');
+        function refreshUI() {
+            const db = JSON.parse(localStorage.getItem(`data_${userData.name}`));
+            document.getElementById('balanceDisplay').innerText = db.balance.toLocaleString(undefined, {minimumFractionDigits: 2});
+            
+            const list = db.logs.map(log => `
+                <div class="bg-white p-5 rounded-2xl border flex justify-between items-center shadow-sm">
+                    <div><p class="text-[9px] font-black text-emerald-600">TREASURY CREDIT</p><p class="text-[8px] text-slate-400">${log.time}</p></div>
+                    <p class="font-black text-slate-900 text-sm">+ ${log.amt.toLocaleString()}</p>
+                </div>
+            `).reverse().join('');
+            document.getElementById('historyList').innerHTML = list || '<p class="text-center text-xs opacity-20 py-10 italic">No ledger entries found</p>';
+        }
+
+        function contactWA(msg) {
+            window.open(`https://wa.me/254100820805?text=Official Inquiry: I am ${userData.name}. Action: ${msg}`, '_blank');
+        }
+
+        function submitTicket() {
+            const text = document.getElementById('supportText').value;
+            if(!text) return;
+            const tickets = JSON.parse(localStorage.getItem('im_tickets') || '[]');
+            tickets.push({ from: userData.name, msg: text, time: new Date().toLocaleString() });
+            localStorage.setItem('im_tickets', JSON.stringify(tickets));
+            alert("Support ticket sent to ImaraWealth Registry.");
+            document.getElementById('supportText').value = '';
         }
 
         function toggleAdmin(show) {
-            if(show) {
-                const pin = prompt("Enter Manager Identification Key:");
-                if(pin === "1122") document.getElementById('adminModal').classList.remove('hidden');
-                else if (pin !== null) alert("Unauthorized Access Detected.");
+            if(show && prompt("Manager Key:") === "1122") {
+                document.getElementById('adminPanel').classList.remove('hidden');
+                const tickets = JSON.parse(localStorage.getItem('im_tickets') || '[]');
+                document.getElementById('inboxView').innerHTML = tickets.map(t => `<div class="mb-2 border-b"><b>${t.from}:</b> ${t.msg}</div>`).join('');
             } else {
-                document.getElementById('adminModal').classList.add('hidden');
+                document.getElementById('adminPanel').classList.add('hidden');
             }
         }
 
-        function updateUserBalance() {
-            const user = document.getElementById('adminTarget').value.trim();
-            const amt = parseFloat(document.getElementById('adminAmt').value);
-            const key = `db_${user}`;
+        function adminExecute() {
+            const target = document.getElementById('targetUser').value.trim();
+            const amt = parseFloat(document.getElementById('targetAmt').value);
+            const key = `data_${target}`;
             
             if(localStorage.getItem(key)) {
-                let data = JSON.parse(localStorage.getItem(key));
-                const now = new Date();
-                const timestamp = now.toLocaleDateString() + ' | ' + now.toLocaleTimeString();
-                
-                data.balance = amt;
-                data.logs.push({ amt: amt.toFixed(2), time: timestamp });
-                localStorage.setItem(key, JSON.stringify(data));
-                
-                alert(`SUCCESS: Credited $${amt} to user ${user}.`);
-                toggleAdmin(false);
-                if(user === currentSession) refreshUI();
+                let db = JSON.parse(localStorage.getItem(key));
+                db.balance += amt; // Adds to existing balance correctly
+                db.logs.push({ amt, time: new Date().toLocaleString() });
+                localStorage.setItem(key, JSON.stringify(db));
+                alert(`Successfully added ${amt} to ${target}`);
+                if(target === userData.name) refreshUI();
             } else {
-                alert("ERROR: User does not exist in ImaraWealth Registry.");
+                alert("User not found.");
             }
         }
 
-        function logout() {
-            localStorage.removeItem('imara_user');
-            location.reload();
-        }
+        function logout() { localStorage.removeItem('im_auth'); location.reload(); }
     </script>
 </body>
 </html>
