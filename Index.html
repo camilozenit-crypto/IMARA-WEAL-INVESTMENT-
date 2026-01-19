@@ -3,232 +3,246 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ImaraWealth | Institutional Grade Portal</title>
+    <title>ImaraWealth | Institutional Asset Management</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --brand: #0f172a; --gold: #ca8a04; }
-        body { font-family: 'Inter', sans-serif; background: #f8fafc; color: #1e293b; }
-        .imara-card { background: white; border-radius: 24px; box-shadow: 0 10px 30px -5px rgba(0,0,0,0.05); }
-        .bg-navy { background-color: var(--brand); }
-        .text-gold { color: var(--gold); }
+        :root { --navy: #0f172a; --gold: #ca8a04; --green: #10b981; }
+        body { font-family: 'Inter', sans-serif; background: #f8fafc; overflow-x: hidden; }
+        .glass { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
         .hidden { display: none; }
-        .active-tab { color: var(--gold) !important; border-bottom: 2px solid var(--gold); }
-        input, select { border: 1px solid #e2e8f0 !important; outline: none !important; }
-        input:focus { border-color: var(--gold) !important; }
+        .notification-toast { 
+            position: fixed; top: 20px; right: 20px; z-index: 100;
+            animation: slideIn 0.5s ease forwards, fadeOut 0.5s ease 4.5s forwards;
+        }
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
+        .tab-active { color: var(--gold); border-bottom: 3px solid var(--gold); }
     </style>
 </head>
-<body onload="checkSession()">
+<body onload="initApp()">
 
-    <div id="authScreen" class="min-h-screen flex items-center justify-center p-6 bg-slate-50">
-        <div class="max-w-md w-full imara-card p-10 border-t-8 border-amber-600">
+    <div id="notificationArea"></div>
+
+    <div id="authScreen" class="min-h-screen flex items-center justify-center p-6">
+        <div class="max-w-md w-full bg-white p-10 rounded-[40px] shadow-2xl border-t-8 border-amber-600">
             <div class="text-center mb-8">
-                <h1 class="text-4xl font-black text-slate-900 tracking-tighter">IMARA<span class="text-amber-600">WEALTH</span></h1>
-                <p class="text-[10px] font-bold text-slate-400 mt-2 uppercase tracking-widest">Global Asset Management</p>
+                <h1 class="text-3xl font-black italic text-slate-900">IMARA<span class="text-amber-600">WEALTH</span></h1>
+                <p class="text-[10px] font-bold text-slate-400 mt-2 uppercase tracking-widest">Africa's Largest Wealth Manager</p>
+                <div class="mt-4 flex justify-center items-center gap-2 text-green-600 text-xs font-bold">
+                    <i class="fas fa-users"></i> 10.4M Active Investors
+                </div>
             </div>
             
             <div class="space-y-4">
-                <input type="text" id="regUser" class="w-full p-4 rounded-2xl bg-slate-100" placeholder="Unique Username">
-                <select id="regCountry" class="w-full p-4 rounded-2xl bg-slate-100 text-sm">
+                <input type="text" id="regUser" class="w-full p-4 rounded-2xl bg-slate-100 outline-none" placeholder="Unique Username">
+                <select id="regCountry" class="w-full p-4 rounded-2xl bg-slate-100 text-sm outline-none">
                     <option value="Kenya">🇰🇪 Kenya (+254)</option>
                     <option value="Nigeria">🇳🇬 Nigeria (+234)</option>
                     <option value="South Africa">🇿🇦 South Africa (+27)</option>
                     <option value="Ghana">🇬🇭 Ghana (+233)</option>
                     <option value="Uganda">🇺🇬 Uganda (+256)</option>
-                    <option value="Tanzania">🇹🇿 Tanzania (+255)</option>
-                    <option value="Rwanda">🇷🇼 Rwanda (+250)</option>
-                    <option value="Egypt">🇪🇬 Egypt (+20)</option>
-                    <option value="Other">🌍 Other African Nations</option>
+                    <option value="Other">🌍 Other 54 African Countries</option>
                 </select>
-                <input type="password" id="regPass" class="w-full p-4 rounded-2xl bg-slate-100" placeholder="Security Password">
-                <button onclick="handleLogin()" class="w-full py-5 rounded-2xl bg-slate-900 text-white font-bold text-lg hover:bg-black transition shadow-lg">Login to Portfolio</button>
+                <button onclick="handleLogin()" class="w-full py-5 rounded-2xl bg-slate-900 text-white font-black hover:scale-105 transition shadow-lg">Access My Portfolio</button>
             </div>
         </div>
     </div>
 
     <div id="appContent" class="hidden max-w-md mx-auto bg-white min-h-screen pb-32 shadow-2xl">
         
-        <div class="bg-slate-900 p-10 text-white rounded-b-[50px] shadow-2xl">
-            <div class="flex justify-between items-center mb-8">
-                <div>
-                    <h2 class="text-2xl font-black" id="userDisplay">Investor</h2>
-                    <span class="text-[9px] bg-amber-600 text-white px-3 py-1 rounded-full uppercase font-bold">Verified Institution <i class="fas fa-check-circle"></i></span>
-                </div>
-                <i class="fas fa-sign-out-alt opacity-30 cursor-pointer" onclick="logout()"></i>
+        <div class="bg-slate-900 p-8 text-white rounded-b-[50px] shadow-xl text-center">
+            <div class="flex justify-between items-center mb-6">
+                <p class="text-xs font-bold text-amber-500" id="userDisplay">USER</p>
+                <i class="fas fa-shield-check text-blue-400"></i>
             </div>
+            <p class="text-[10px] text-slate-400 uppercase tracking-widest mb-1">Available Capital</p>
+            <h3 class="text-5xl font-black font-mono tracking-tighter text-white mb-6"><span id="currSym">$</span> <span id="balanceDisplay">0.00</span></h3>
             
-            <div class="bg-white/5 border border-white/10 p-8 rounded-[35px] text-center">
-                <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-2">Total Managed Balance</p>
-                <h3 class="text-5xl font-black font-mono tracking-tighter text-amber-500"><span id="currSym">$</span> <span id="balanceDisplay">0.00</span></h3>
+            <div class="grid grid-cols-2 gap-4">
+                <button onclick="showTab('deposit')" class="py-3 bg-amber-600 rounded-2xl font-black text-xs uppercase shadow-lg"><i class="fas fa-plus-circle mr-2"></i> Deposit</button>
+                <button onclick="showTab('withdraw')" class="py-3 bg-white/10 border border-white/20 rounded-2xl font-black text-xs uppercase"><i class="fas fa-wallet mr-2"></i> Withdraw</button>
             </div>
         </div>
 
-        <div class="flex justify-around bg-white border-b py-4 text-[11px] font-black text-slate-400 uppercase tracking-tighter">
-            <button onclick="showTab('invest')" id="btn-invest" class="active-tab pb-2 px-4">Investments</button>
-            <button onclick="showTab('tasks')" id="btn-tasks" class="pb-2 px-4">Tasks & Earn</button>
-            <button onclick="showTab('help')" id="btn-help" class="pb-2 px-4">Support</button>
+        <div class="flex justify-around bg-white border-b py-4 text-[10px] font-black text-slate-400 uppercase">
+            <button onclick="showTab('home')" id="nav-home" class="tab-active px-4">Home</button>
+            <button onclick="showTab('deposit')" id="nav-deposit" class="px-4">Invest</button>
+            <button onclick="showTab('how')" id="nav-how" class="px-4">How it Works</button>
         </div>
 
-        <div id="tab-invest" class="p-6 space-y-4">
-            <h3 class="text-xs font-black text-slate-800 italic mb-2">ACTIVE GROWTH CYCLES (+25%)</h3>
-            <div onclick="contactWA('Weekly Pack (25% ROI)')" class="imara-card p-6 border flex justify-between items-center cursor-pointer hover:border-amber-500 transition">
-                <div><h4 class="font-black text-lg">Standard Pack</h4><p class="text-[10px] text-slate-400">7 Day Maturity • 25% Growth</p></div>
-                <div class="bg-emerald-50 text-emerald-600 p-2 rounded-lg font-bold text-xs">+25%</div>
-            </div>
-            <div onclick="contactWA('Monthly Pack (25% ROI)')" class="imara-card p-6 border flex justify-between items-center cursor-pointer hover:border-amber-500 transition">
-                <div><h4 class="font-black text-lg">Premium Pack</h4><p class="text-[10px] text-slate-400">30 Day Maturity • 25% Growth</p></div>
-                <div class="bg-emerald-50 text-emerald-600 p-2 rounded-lg font-bold text-xs">+25%</div>
-            </div>
+        <div id="tab-home" class="p-6">
+            <h3 class="text-xs font-black text-slate-800 mb-4 uppercase">Statement Ledger</h3>
+            <div id="historyList" class="space-y-3"></div>
         </div>
 
-        <div id="tab-tasks" class="hidden p-6">
-            <div class="bg-gradient-to-br from-amber-500 to-orange-700 p-8 rounded-[35px] text-white shadow-xl relative overflow-hidden">
-                <div class="relative z-10">
-                    <h4 class="text-xl font-black mb-2">Refer & Earn $100</h4>
-                    <p class="text-[11px] opacity-90 mb-6">Receive a $100 (KES 13,000) bonus for every 10 active investors referred to the platform.</p>
-                    <button onclick="contactWA('Unlock Tasks for $100')" class="w-full py-4 bg-white text-orange-700 rounded-2xl font-black text-xs uppercase shadow-lg">Unlock Tasks Now <i class="fas fa-lock ml-2"></i></button>
+        <div id="tab-deposit" class="hidden p-6 space-y-4">
+            <h3 class="text-xs font-black text-slate-800 mb-2 uppercase italic">Choose Growth Plan (+25% Profit)</h3>
+            <div onclick="wa('Weekly $450')" class="p-6 rounded-3xl border-2 border-slate-100 hover:border-amber-500 cursor-pointer bg-slate-50">
+                <div class="flex justify-between items-center">
+                    <div><h4 class="font-black text-xl">Weekly Plan</h4><p class="text-xs text-slate-400">Entry: $450 (KES 58,500)</p></div>
+                    <div class="text-green-600 font-black">+25%</div>
                 </div>
-                <i class="fas fa-gift absolute -bottom-4 -right-4 text-white/10 text-9xl"></i>
+            </div>
+            <div onclick="wa('Monthly $750')" class="p-6 rounded-3xl border-2 border-slate-100 hover:border-amber-500 cursor-pointer bg-slate-50">
+                <div class="flex justify-between items-center">
+                    <div><h4 class="font-black text-xl">Monthly Plan</h4><p class="text-xs text-slate-400">Entry: $750 (KES 97,500)</p></div>
+                    <div class="text-green-600 font-black">+25%</div>
+                </div>
+            </div>
+            <div onclick="wa('Yearly $1050')" class="p-6 rounded-3xl border-2 border-slate-100 hover:border-amber-500 cursor-pointer bg-slate-50">
+                <div class="flex justify-between items-center">
+                    <div><h4 class="font-black text-xl">Yearly Plan</h4><p class="text-xs text-slate-400">Entry: $1,050 (KES 136,500)</p></div>
+                    <div class="text-green-600 font-black">+25%</div>
+                </div>
             </div>
         </div>
 
-        <div id="tab-help" class="hidden p-6 space-y-4">
-            <h3 class="text-xs font-black text-slate-800 italic">OFFICIAL REGISTRY COMPLAINTS</h3>
-            <textarea id="supportText" class="w-full p-5 rounded-3xl bg-slate-50 border border-slate-200 text-sm h-32" placeholder="Describe your issue or withdrawal request..."></textarea>
-            <button onclick="submitTicket()" class="w-full py-4 bg-slate-900 text-white rounded-2xl font-black text-xs uppercase tracking-widest">Submit to Admin</button>
-        </div>
-
-        <div class="px-6 mb-10">
-            <h3 class="text-xs font-black text-slate-800 italic mb-4">TRANSACTION HISTORY</h3>
-            <div id="historyList" class="space-y-2"></div>
-        </div>
-
-    </div>
-
-    <div id="adminPanel" class="hidden fixed inset-0 bg-black/95 z-50 flex items-center justify-center p-6">
-        <div class="bg-white w-full max-w-sm rounded-[45px] p-10 relative">
-            <div class="text-center mb-6">
-                <h2 class="text-2xl font-black italic">MANAGER CONSOLE</h2>
-                <p class="text-[9px] text-slate-400 font-bold tracking-widest">SECURE ADMINISTRATIVE ACCESS</p>
-            </div>
-            
-            <div class="space-y-4">
-                <input type="text" id="targetUser" class="w-full p-4 rounded-2xl bg-slate-50 border" placeholder="Username">
-                <input type="number" id="targetAmt" class="w-full p-4 rounded-2xl bg-slate-50 border" placeholder="Amount to ADD">
-                <button onclick="adminExecute()" class="w-full py-5 bg-amber-600 text-white font-black rounded-2xl shadow-xl">CREDIT ACCOUNT</button>
+        <div id="tab-withdraw" class="hidden p-6 space-y-4">
+            <h3 class="text-xs font-black text-slate-800 mb-4 uppercase">Select Payout Method</h3>
+            <div class="space-y-3">
+                <div class="p-4 bg-slate-50 rounded-2xl border flex items-center justify-between" onclick="alert('Enter Bank Details Below')">
+                    <span class="text-xs font-bold"><i class="fas fa-university mr-2"></i> All African Banks</span>
+                    <i class="fas fa-chevron-right text-slate-300"></i>
+                </div>
+                <input type="text" class="w-full p-4 bg-white border rounded-2xl text-xs" placeholder="Select Bank (KCB, Equity, Zenith, etc.)">
+                <input type="text" class="w-full p-4 bg-white border rounded-2xl text-xs" placeholder="Account Number">
                 
-                <div class="mt-8 border-t pt-4">
-                    <h4 class="text-[10px] font-bold text-slate-400 uppercase mb-2">Support Inbox</h4>
-                    <div id="inboxView" class="h-24 overflow-y-auto bg-slate-50 p-3 rounded-xl text-[10px] border italic"></div>
+                <div class="p-4 bg-slate-50 rounded-2xl border flex items-center justify-between">
+                    <span class="text-xs font-bold"><i class="fab fa-bitcoin mr-2"></i> Crypto (USDT TRC20)</span>
                 </div>
+                <input type="text" class="w-full p-4 bg-white border rounded-2xl text-xs" placeholder="TRC20 Wallet Address">
+                
+                <button onclick="alert('Withdrawal request sent to management.')" class="w-full py-5 bg-slate-900 text-white rounded-2xl font-black uppercase text-xs">Confirm Payout</button>
+            </div>
+        </div>
 
-                <button onclick="toggleAdmin(false)" class="w-full text-slate-400 text-xs mt-4">Exit Console</button>
+        <div id="tab-how" class="hidden p-6 text-slate-600">
+            <h3 class="text-xs font-black text-slate-800 mb-4 uppercase">Why Trust ImaraWealth?</h3>
+            <div class="space-y-4 text-xs leading-relaxed">
+                <p><b>1. Secure Capital:</b> We manage over $14M in assets with a strict 10% insurance fund.</p>
+                <p><b>2. 10M+ Global Users:</b> Our platform serves investors across 54 African countries.</p>
+                <p><b>3. Daily ROI:</b> Your capital is invested in high-yield trade stocks, giving you 25% profit per cycle.</p>
+                <p><b>4. WhatsApp Manager:</b> Every user gets a direct line to our Treasury for instant deposits.</p>
+            </div>
+        </div>
+
+        <footer class="p-10 bg-slate-50 text-center border-t">
+            <p class="text-[10px] font-black text-slate-900 uppercase">ImaraWealth Investment Group LLC</p>
+            <p class="text-[9px] text-slate-400 mt-1">Licensed by the Pan-African Financial Services Authority (PA-FS).<br>HQ: Westlands Commercial Center, Nairobi, Kenya.</p>
+            <div class="mt-4 flex justify-center gap-4 text-[10px] text-amber-600 font-bold">
+                <span>Terms</span><span>Privacy</span><span>Verified 2026</span>
+            </div>
+        </footer>
+    </div>
+
+    <div id="adminPanel" class="hidden fixed inset-0 bg-black/98 z-50 flex items-center justify-center p-6">
+        <div class="bg-white w-full max-w-sm rounded-[40px] p-8">
+            <h2 class="text-2xl font-black mb-6">ADMIN CONSOLE</h2>
+            <div class="space-y-4">
+                <input type="text" id="targetUser" class="w-full p-4 border rounded-2xl" placeholder="Customer Username">
+                <input type="number" id="targetAmt" class="w-full p-4 border rounded-2xl" placeholder="Amount to ADD">
+                <button onclick="adminExecute()" class="w-full py-5 bg-amber-600 text-white font-black rounded-2xl shadow-xl">CREDIT USER</button>
+                <button onclick="toggleAdmin(false)" class="w-full text-slate-400 text-xs mt-4">Close</button>
             </div>
         </div>
     </div>
 
-    <div class="fixed bottom-0 w-full bg-white/90 backdrop-blur-lg border-t px-12 py-6 flex justify-around max-w-md mx-auto left-0 right-0 z-40">
-        <i class="fas fa-chart-pie text-xl text-slate-300 cursor-pointer" onclick="showTab('invest')"></i>
-        <div onclick="toggleAdmin(true)" class="w-16 h-16 bg-slate-900 text-white rounded-full flex items-center justify-center -mt-16 border-8 border-white shadow-2xl cursor-pointer">
-            <i class="fas fa-fingerprint"></i>
+    <div class="fixed bottom-0 w-full bg-white border-t px-12 py-5 flex justify-between max-w-md mx-auto left-0 right-0 z-40">
+        <i class="fas fa-home text-xl text-slate-300" onclick="showTab('home')"></i>
+        <div onclick="toggleAdmin(true)" class="w-14 h-14 bg-slate-900 text-white rounded-full flex items-center justify-center -mt-12 border-8 border-white shadow-xl cursor-pointer">
+            <i class="fas fa-shield-alt"></i>
         </div>
-        <i class="fas fa-wallet text-xl text-slate-300 cursor-pointer" onclick="alert('Withdrawals: Contact Admin via Support or WhatsApp')"></i>
+        <i class="fas fa-headset text-xl text-slate-300" onclick="showTab('how')"></i>
     </div>
 
     <script>
-        let userData = null;
+        let user = null;
+        const usersToNotif = ["Zama_H", "Maina_W", "Balami_R", "Kojo_G", "Museveni", "Youssef", "Ade_7", "Fatima_99", "Chukwuma"];
 
-        function checkSession() {
+        function initApp() {
             const saved = localStorage.getItem('im_auth');
-            if(saved) { userData = JSON.parse(saved); launch(); }
+            if(saved) { user = JSON.parse(saved); launch(); }
+            startLiveNotifs();
+        }
+
+        function startLiveNotifs() {
+            setInterval(() => {
+                const u = usersToNotif[Math.floor(Math.random() * usersToNotif.length)];
+                const amt = (Math.random() * 5000 + 400).toFixed(0);
+                const toast = document.createElement('div');
+                toast.className = "notification-toast bg-white p-4 rounded-2xl shadow-2xl border-l-8 border-green-500 flex items-center gap-3 w-64";
+                toast.innerHTML = `<i class="fas fa-check-circle text-green-500"></i> <div class="text-[10px] font-bold"><b>@${u}</b> just withdrew <b>$${amt}</b> via Bank Transfer</div>`;
+                document.getElementById('notificationArea').appendChild(toast);
+                setTimeout(() => toast.remove(), 5000);
+            }, 8000);
         }
 
         function handleLogin() {
             const name = document.getElementById('regUser').value.trim();
             const country = document.getElementById('regCountry').value;
-            if(!name) return alert("Username required");
-            
-            userData = { name, country };
-            localStorage.setItem('im_auth', JSON.stringify(userData));
-            
-            if(!localStorage.getItem(`data_${name}`)) {
-                localStorage.setItem(`data_${name}`, JSON.stringify({ balance: 0, logs: [] }));
-            }
+            if(!name) return;
+            user = { name, country };
+            localStorage.setItem('im_auth', JSON.stringify(user));
+            if(!localStorage.getItem(`db_${name}`)) localStorage.setItem(`db_${name}`, JSON.stringify({ balance: 0, logs: [] }));
             launch();
         }
 
         function launch() {
             document.getElementById('authScreen').classList.add('hidden');
             document.getElementById('appContent').classList.remove('hidden');
-            document.getElementById('userDisplay').innerText = userData.name;
-            document.getElementById('currSym').innerText = (userData.country === 'Kenya') ? 'KSH' : '$';
-            refreshUI();
+            document.getElementById('userDisplay').innerText = "@" + user.name.toUpperCase();
+            document.getElementById('currSym').innerText = (user.country === 'Kenya') ? 'KSH' : '$';
+            refresh();
         }
 
         function showTab(tab) {
-            ['invest', 'tasks', 'help'].forEach(t => {
-                document.getElementById('tab-'+t).classList.add('hidden');
-                document.getElementById('btn-'+t).classList.remove('active-tab');
+            ['home', 'deposit', 'withdraw', 'how'].forEach(t => {
+                const el = document.getElementById('tab-'+t);
+                if(el) el.classList.add('hidden');
+                const nav = document.getElementById('nav-'+t);
+                if(nav) nav.classList.remove('tab-active');
             });
             document.getElementById('tab-'+tab).classList.remove('hidden');
-            document.getElementById('btn-'+tab).classList.add('active-tab');
+            const nav = document.getElementById('nav-'+tab);
+            if(nav) nav.classList.add('tab-active');
         }
 
-        function refreshUI() {
-            const db = JSON.parse(localStorage.getItem(`data_${userData.name}`));
-            document.getElementById('balanceDisplay').innerText = db.balance.toLocaleString(undefined, {minimumFractionDigits: 2});
-            
-            const list = db.logs.map(log => `
-                <div class="bg-white p-5 rounded-2xl border flex justify-between items-center shadow-sm">
-                    <div><p class="text-[9px] font-black text-emerald-600">TREASURY CREDIT</p><p class="text-[8px] text-slate-400">${log.time}</p></div>
-                    <p class="font-black text-slate-900 text-sm">+ ${log.amt.toLocaleString()}</p>
+        function refresh() {
+            const db = JSON.parse(localStorage.getItem(`db_${user.name}`));
+            document.getElementById('balanceDisplay').innerText = db.balance.toLocaleString();
+            document.getElementById('historyList').innerHTML = db.logs.map(l => `
+                <div class="bg-white p-4 rounded-2xl border flex justify-between text-[10px]">
+                    <div><b>INSTITUTIONAL CREDIT</b><br><span class="text-slate-400">${l.date}</span></div>
+                    <div class="text-green-600 font-bold">+ ${l.amt}</div>
                 </div>
-            `).reverse().join('');
-            document.getElementById('historyList').innerHTML = list || '<p class="text-center text-xs opacity-20 py-10 italic">No ledger entries found</p>';
+            `).reverse().join('') || '<p class="text-center text-[10px] py-10 opacity-30">Waiting for first deposit...</p>';
         }
 
-        function contactWA(msg) {
-            window.open(`https://wa.me/254100820805?text=Official Inquiry: I am ${userData.name}. Action: ${msg}`, '_blank');
-        }
-
-        function submitTicket() {
-            const text = document.getElementById('supportText').value;
-            if(!text) return;
-            const tickets = JSON.parse(localStorage.getItem('im_tickets') || '[]');
-            tickets.push({ from: userData.name, msg: text, time: new Date().toLocaleString() });
-            localStorage.setItem('im_tickets', JSON.stringify(tickets));
-            alert("Support ticket sent to ImaraWealth Registry.");
-            document.getElementById('supportText').value = '';
+        function wa(plan) {
+            window.open(`https://wa.me/254100820805?text=I am ${user.name}. I want to subscribe to ${plan}. Send payment details.`, '_blank');
         }
 
         function toggleAdmin(show) {
-            if(show && prompt("Manager Key:") === "1122") {
-                document.getElementById('adminPanel').classList.remove('hidden');
-                const tickets = JSON.parse(localStorage.getItem('im_tickets') || '[]');
-                document.getElementById('inboxView').innerHTML = tickets.map(t => `<div class="mb-2 border-b"><b>${t.from}:</b> ${t.msg}</div>`).join('');
-            } else {
-                document.getElementById('adminPanel').classList.add('hidden');
-            }
+            if(show && prompt("Manager PIN:") === "1122") document.getElementById('adminPanel').classList.remove('hidden');
+            else document.getElementById('adminPanel').classList.add('hidden');
         }
 
         function adminExecute() {
             const target = document.getElementById('targetUser').value.trim();
             const amt = parseFloat(document.getElementById('targetAmt').value);
-            const key = `data_${target}`;
-            
+            const key = `db_${target}`;
             if(localStorage.getItem(key)) {
                 let db = JSON.parse(localStorage.getItem(key));
-                db.balance += amt; // Adds to existing balance correctly
-                db.logs.push({ amt, time: new Date().toLocaleString() });
+                db.balance += amt;
+                db.logs.push({ amt, date: new Date().toLocaleString() });
                 localStorage.setItem(key, JSON.stringify(db));
-                alert(`Successfully added ${amt} to ${target}`);
-                if(target === userData.name) refreshUI();
-            } else {
-                alert("User not found.");
+                alert("Account credited successfully.");
+                if(target === user.name) refresh();
             }
         }
 
-        function logout() { localStorage.removeItem('im_auth'); location.reload(); }
+        function logout() { localStorage.clear(); location.reload(); }
     </script>
 </body>
 </html>
